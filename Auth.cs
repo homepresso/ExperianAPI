@@ -27,13 +27,13 @@ namespace nintex.function.experian
     }
     public static class experianauthToken
     {
-        [FunctionName("experianauthToken")]
+        [FunctionName("token")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Experian Auth Token"})]
         [OpenApiParameter(name: "clientID", In = ParameterLocation.Header, Required = true, Type = typeof(string), Description = "Experian Client ID")]
         [OpenApiParameter(name: "clientSecret", In = ParameterLocation.Header, Required = true, Type = typeof(string), Description = "Experian Client Secret")]
         [OpenApiParameter(name: "userName", In = ParameterLocation.Header, Required = true, Type = typeof(string), Description = "Experian User Name")]
         [OpenApiParameter(name: "passWord", In = ParameterLocation.Header, Required = true, Type = typeof(string), Description = "Experian Password")]
-        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "Bearer Token")]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.OK, contentType: "application/json", bodyType: typeof(object), Description = "Bearer - Token")]
         public static async Task<token> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
