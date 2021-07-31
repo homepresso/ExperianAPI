@@ -27,7 +27,7 @@ namespace nintex.function.experian
     }
     public static class experianauthToken
     {
-        [FunctionName("token")]
+        [FunctionName("Token")]
         [OpenApiOperation(operationId: "Run", tags: new[] { "Experian Auth Token"})]
         [OpenApiParameter(name: "clientID", In = ParameterLocation.Header, Required = true, Type = typeof(string), Description = "Experian Client ID")]
         [OpenApiParameter(name: "clientSecret", In = ParameterLocation.Header, Required = true, Type = typeof(string), Description = "Experian Client Secret")]
