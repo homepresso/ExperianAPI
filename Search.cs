@@ -7,29 +7,64 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Experian.Api.Client;
+using Experian.Api.Client.Bis;
+
 
 namespace nintex.function.experian
 {
     public static class Search
     {
         [FunctionName("Search")]
-        public static async Task<IActionResult> Run(
+        public static async Task<dynamic> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)] HttpRequest req,
             ILogger log)
+        
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
 
-            string name = req.Query["name"];
+            string Name = req.Query["Name"];
+            string City = req.Query["City"];
+            string State = req.Query["State"];
+            string Subcode = req.Query["Subcode"];
+            string Street = req.Query["Street"];
+            string Zip = req.Query["Zip"];
+            string Phone = req.Query["Phone"];
+            string TaxId = req.Query["TaxId"];
+            string Comments = req.Query["Comments"];
+            string Token = req.Headers["Token"];
+            string clientID = req.Headers["clientID"];
+            string clientSecret = req.Headers["clientSecret"];
+            string userName = req.Headers["userName"];
+            string passWord = req.Headers["passWord"];
 
-            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-            dynamic data = JsonConvert.DeserializeObject(requestBody);
-            name = name ?? data?.name;
+            var request = new SearchRequest()
+            {
+                Name     = Name,
+                City     = City,
+                State    = State,
+                Subcode  = Subcode,
+                Street   = Street,
+                Zip      = Zip,
+                Phone    = Phone,
+                TaxId    = TaxId,
+                Geo      = true,
+                Comments = Comments,
+            };
 
-            string responseMessage = string.IsNullOrEmpty(name)
-                ? "This HTTP triggered function executed successfully. Pass a name in the query string or in the request body for a personalized response."
-                : $"Hello, {name}. This HTTP triggered function executed successfully.";
+            var serviceClient = new ServiceClient();
+            var authResponse    = serviceClient.SendAuthenticationRequestAsync(new AuthRequest(userName, passWord), clientID, clientSecret, ServiceClient.OAuthSandboxUrl).Result;
+            var response = serviceClient.PostSearchAsync(Environ.Sandbox, authResponse, request);
 
-            return new OkObjectResult(responseMessage);
+
+
+
+            return response.Result;
         }
-    }
+
+
+
+        }
 }
+
+
